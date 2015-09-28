@@ -3,10 +3,29 @@ class Parser(object):
     def __init__(self):
         pass
 
-    def ParseConfig(self,*args,**kwargs):
+    def parseConfig(self,*args,**kwargs):
         """ base method to define where config file is parsed """
         pass
 
-    def ParseWebPage(self,*args,**kwargs):
+    def parseWebPage(self,*args,**kwargs):
         """ Base method to define where web page is parsed """
         pass
+    def parseListOfParam(self,text):
+        """ return a dict of a string of type key1=value1,key2=value2,...,keyN=valueN"""
+
+        x = {}
+
+        for keyValueCouple in text.split(",") :
+
+            lstKeyValue = keyValueCouple.split('=')
+            if len(lstKeyValue) == 2 :
+                x[lstKeyValue[0]] = lstKeyValue[1]
+            else:
+                #TODO: raise an error of formating
+                print "Error : Bad formating!"
+
+        return x
+
+
+
+
