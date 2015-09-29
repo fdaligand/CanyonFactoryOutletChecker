@@ -29,6 +29,19 @@ class CanyonParser(Parser):
 
     def parseWebPage(self,webText):
 
+        foundModel = 0
+
         tree = html.fromstring(webText)
-        pdb.set_trace()
+        #remove first ellement where is a dumy example
+        elements = tree.getchildren()[1:]
+
+        for element in elements:
+
+            if '|L|' in element.attrib.get('data-size',None):
+
+                pdb.set_trace()
+                foundModel += 1
+                print "I found a new bicycle named %s"%element.attrib.get('data-series','unknow')
+                print " It's the %d found model"%foundModel
+
         return self.webParams
