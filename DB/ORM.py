@@ -1,6 +1,11 @@
 from peewee import *
+import os
 
-db = SqliteDatabase('CFO.db')
+db = SqliteDatabase(r'C:\Users\fdalingand\GitHub\CanyonFactoryOutlet\DB\CFO.db')
+
+def create_tables():
+    db.connect()
+    db.create_tables([Category,SubCategory,Item,Attribut,AttribToItem])
 
 class BaseModel(Model):
     class Meta:
@@ -18,7 +23,7 @@ class SubCategory(BaseModel):
 class Item(BaseModel):
 
     name = CharField(max_length=255)
-    subcategory = ForeignKeyField(SubCategory)
+    subCategory = ForeignKeyField(SubCategory)
 
 class Attribut(BaseModel):
 
@@ -33,6 +38,9 @@ class AttribToItem(BaseModel):
 
     item = ForeignKeyField(Item)
     attribut = ForeignKeyField(Attribut)
+
+
+
 
 
 
