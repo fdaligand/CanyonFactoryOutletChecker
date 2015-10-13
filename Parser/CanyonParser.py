@@ -2,7 +2,7 @@ from Parser import Parser
 import ConfigParser
 from lxml import html
 from DB import ORM
-from DB.ORM import Category,SubCategory,Item,AttribToItem,Attribut
+from DB.ORM import Category,SubCategory,Item,AttribToItem,Attribut,Update
 import peewee
 import pdb
 
@@ -32,31 +32,24 @@ class CanyonParser(Parser):
 
     def parseWebPage(self,webText):
 
-        foundModel = 0
+        errorInUpdate = False
 
         tree = html.fromstring(webText)
         #remove first ellement where is a dumy example
-
-        #
-        #
-        #
-        #
-        #
-        #
-        #
-
         elements = tree.getchildren()[1:]
 
         for element in elements:
 
             #create a dict with all relevant information
+            newField,errorInUpdate = self.updateModels(element.attrib)
 
-            self.updateModels(element.attrib)
-            if '|L|' in element.attrib.get('data-size',None):
+            #We detect new field durin update
+            if newField:
+                pass
 
-                foundModel += 1
-                print "I found a new bicycle named %s"%element.attrib.get('data-series','unknow')
-                print " It's the %d found model"%foundModel
+            #Some errors (not critical) appear during update
+            if errorInUpdate:
+                pass
 
         return self.webParams
 
@@ -67,33 +60,32 @@ class CanyonParser(Parser):
 
             cateAndSubCate = [x for x in parsedData.get('data-category').split('|') if x != '' ]
             cate,isCreated = Category.get_or_create(name=cateAndSubCate[0])
-            print "category : %s"%cate.name
+            #print "category : %s"%cate.name
             subCate,dummy = SubCategory.get_or_create(name=cateAndSubCate[1],category=cate.id)
-            print "sub-category : %s"%subCate.name
+            #print "sub-category : %s"%subCate.name
 
             if (parsedData.get('data-series')):
                 serie,dummy = Item.get_or_create(name=parsedData['data-series'],subCategory=subCate.id)
-                print "item: %s"%serie.name
+                #print "item: %s"%serie.name
             else :
-               return
+               return None,True
 
            #parse all parameters
             for key,value in parsedData.items():
 
+                #skip already parsed attributes
                 if key in ['data-category','data-series']:
                     continue
 
-                atrib,dummy = Attribut.get_or_create(key=key,value=value)
-                print "Atribut : %s = %s"%(atrib.key,atrib.value)
+                #atrib,dummy = Attribut.get_or_create(key=key,value=value)
+                atrib = Update.check(Attribut.get_or_create(key=key,value=value))
+                #print "Atribut : %s = %s"%(atrib.key,atrib.value)
                 atribToItem,dummy = AttribToItem.get_or_create(item = serie.id , attribut = atrib.id )
 
-
-
-
-
-
+            return None,False
         else :
-            raise NameError("No category/subcategory found, check html syntaxe!")
+            return None,True
+
 
 if __name__ == '__main__':
 
