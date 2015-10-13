@@ -2,8 +2,9 @@ from Parser import Parser
 import ConfigParser
 from lxml import html
 from DB import ORM
-from DB.ORM import Category,SubCategory,Item,AttribToItem,Attribut,Update
+from DB.ORM import Category,SubCategory,Item,AttribToItem,Attribut
 import peewee
+import os
 import pdb
 
 class CanyonParser(Parser):
@@ -59,14 +60,14 @@ class CanyonParser(Parser):
         if (parsedData.get('data-category')) :
 
             cateAndSubCate = [x for x in parsedData.get('data-category').split('|') if x != '' ]
-            cate,isCreated = Category.get_or_create(name=cateAndSubCate[0])
-            #print "category : %s"%cate.name
+            cate = self.raiseEvent(Category.get_or_create(name=cateAndSubCate[0]))
+            print "category : %s"%cate.name
             subCate,dummy = SubCategory.get_or_create(name=cateAndSubCate[1],category=cate.id)
-            #print "sub-category : %s"%subCate.name
+            print "sub-category : %s"%subCate.name
 
             if (parsedData.get('data-series')):
                 serie,dummy = Item.get_or_create(name=parsedData['data-series'],subCategory=subCate.id)
-                #print "item: %s"%serie.name
+                print "item: %s"%serie.name
             else :
                return None,True
 
@@ -78,20 +79,27 @@ class CanyonParser(Parser):
                     continue
 
                 #atrib,dummy = Attribut.get_or_create(key=key,value=value)
-                atrib = Update.check(Attribut.get_or_create(key=key,value=value))
-                #print "Atribut : %s = %s"%(atrib.key,atrib.value)
+                atrib = self.raiseEvent(Attribut.get_or_create(key=key,value=value))
+                print "Atribut : %s = %s"%(atrib.key,atrib.value)
                 atribToItem,dummy = AttribToItem.get_or_create(item = serie.id , attribut = atrib.id )
 
             return None,False
         else :
             return None,True
 
+    def raiseEvent(self,tup):
+	if tup[1]:
+	    raise NameError("New update in database")
+        else :
+            return tup[0]
+
 
 if __name__ == '__main__':
-
+   
     testParser = CanyonParser()
+    pathFile = os.path.join('..','DumpHtmlPage','test.html')
     dummyWebPage = ""
-    with open(r'..\DumpHtmlPage\test.html','r') as inputFile:
+    with open(pathFile ,'r') as inputFile:
         for line in inputFile:
             dummyWebPage += line
     retFromParser = testParser.parseWebPage(dummyWebPage)
