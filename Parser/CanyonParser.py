@@ -78,7 +78,7 @@ class CanyonParser(Parser):
                     continue
 
                 #atrib,dummy = Attribut.get_or_create(key=key,value=value)
-                atrib = Update.check(Attribut.get_or_create(key=key,value=value))
+                atrib,dummy = Attribut.get_or_create(key=key,value=value)
                 #print "Atribut : %s = %s"%(atrib.key,atrib.value)
                 atribToItem,dummy = AttribToItem.get_or_create(item = serie.id , attribut = atrib.id )
 
