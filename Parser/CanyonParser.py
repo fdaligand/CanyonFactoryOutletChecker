@@ -3,17 +3,22 @@ import ConfigParser
 from lxml import html
 from DB import ORM
 from DB.ORM import Category,SubCategory,Item,AttribToItem,Attribut
+from Dispatcher.EventDispatcher import EventDispatcher
+from Dispatcher.Event import DbEvent
+from Formater.Format import CanyonFormat
 import peewee
 import os
 import pdb
 
+
 class CanyonParser(Parser):
 
-    def __init__(self,configPath=None):
+    def __init__(self,configPath=None,eventDispatcher=None):
 
         self.params = CanyonParser.parseConfig(self,configPath)
         self.webParams = {}
-        pass
+        self.eventDispatcher = eventDispatcher
+
 
     def parseConfig(self,configPath):
         """ Parse specific cfg file """
@@ -79,7 +84,7 @@ class CanyonParser(Parser):
                     continue
 
                 #atrib,dummy = Attribut.get_or_create(key=key,value=value)
-                atrib,dummy = Attribut.get_or_create(key=key,value=value)
+                atrib = self.raiseEvent(Attribut.get_or_create(key=key,value=value))
                 #print "Atribut : %s = %s"%(atrib.key,atrib.value)
                 atribToItem,dummy = AttribToItem.get_or_create(item = serie.id , attribut = atrib.id )
 
@@ -88,15 +93,21 @@ class CanyonParser(Parser):
             return None,True
 
     def raiseEvent(self,tup):
-	if tup[1]:
-	    raise NameError("New update in database")
+
+        if tup[1]:
+            self.eventDispatcher.dispatchEvent( DbEvent(tup[0].__class__.__name__,tup[0].id,data=tup[0] ))
+            return tup[0]
+
         else :
             return tup[0]
 
 
 if __name__ == '__main__':
 
-    testParser = CanyonParser()
+    EP = EventDispatcher()
+    formater = CanyonFormat(eventDispatcher=EP)
+    #TODO try with dynamic instanciation
+    testParser = CanyonParser(eventDispatcher=EP)
     pathFile = os.path.join('..','DumpHtmlPage','test.html')
     dummyWebPage = ""
     with open(pathFile ,'r') as inputFile:

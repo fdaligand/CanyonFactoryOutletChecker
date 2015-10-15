@@ -1,5 +1,5 @@
 #source code inspired (copied ...) from http://www.expobrain.net/2010/07/31/simple-event-dispatcher-in-python/
-
+import pdb
 class EventDispatcher( object ):
 
     def __init__(self):
@@ -18,16 +18,15 @@ class EventDispatcher( object ):
             return False
 
     def dispatchEvent(self,event):
-
+        pdb.set_trace()
         if ( event._type in self._events.keys() ):
-            listeners = self._events[ event.type ]
+            listeners = self._events[ event._type ]
 
             for listener in listeners :
                 listener( event )
 
     def addEventListener(self,event_type, listener):
-
-        if not self.hasListener( self, event_type, listener) :
+        if not self.hasListener( event_type, listener) :
 
             listeners = self._events.get(event_type,[])
             listeners.append( listener )

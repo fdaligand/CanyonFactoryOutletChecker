@@ -1,8 +1,8 @@
 class Parser(object):
 
     def __init__(self,event_dispatcher=None):
-        
-        self.event_dispatcher = event_dispatcher   
+
+        self.event_dispatcher = event_dispatcher
 
     def parseConfig(self,*args,**kwargs):
         """ base method to define where config file is parsed """
@@ -28,8 +28,8 @@ class Parser(object):
         return x
 
     def raiseEvent(self,tup):
-        return tup[0]
-	
+        pass
+
 
 
 

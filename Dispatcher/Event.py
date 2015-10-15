@@ -9,7 +9,7 @@ class DbEvent(Event):
 
     def __init__(self,event_type,id,data=None):
 
-        self.super(self,event_type,data)
+        super(DbEvent,self).__init__(event_type,data)
         self._id = id
 
 
