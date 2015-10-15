@@ -89,6 +89,7 @@ class CanyonParser(Parser):
                                        year=int(parsedData.get('data-year','0')),
                                        url=parsedData.get('data-url','No url'),
                                        serie=serie.id)
+                    self.eventDispatcher.dispatchEvent(DbEvent(item.__class__.__name__,item.id,data=item))
 
 
             return None,False
