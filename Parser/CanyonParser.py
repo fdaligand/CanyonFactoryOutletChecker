@@ -2,7 +2,7 @@ from Parser import Parser
 import ConfigParser
 from lxml import html
 from DB import ORM
-from DB.ORM import Category,SubCategory,Item,AttribToItem,Attribut
+from DB.ORM import Category,SubCategory,Serie,Item
 from Dispatcher.EventDispatcher import EventDispatcher
 from Dispatcher.Event import DbEvent
 from Formater.Format import CanyonFormat
@@ -71,22 +71,25 @@ class CanyonParser(Parser):
             print "sub-category : %s"%subCate.name
 
             if (parsedData.get('data-series')):
-                serie,dummy = Item.get_or_create(name=parsedData['data-series'],subCategory=subCate.id)
-                print "item: %s"%serie.name
+                serie,dummy = Serie.get_or_create(name=parsedData['data-series'],subCategory=subCate.id)
+                print "Serie: %s"%serie.name
             else :
                return None,True
 
-           #parse all parameters
-            for key,value in parsedData.items():
+            if (parsedData.get('data-id')):
+                try:
+                    item = Item.get(Item.item_id == parsedData['data-id'])
+                except peewee.DoesNotExist :
+                    item = Item.create(item_id=parsedData['data-id'],
+                                       price=int(parsedData.get('data-price','0')),
+                                       diff=int(parsedData.get('data-diff','0')),
+                                       date=parsedData.get('data-date','No date'),
+                                       size=parsedData.get('data-size','No size'),
+                                       state=parsedData.get('data-state','No state'),
+                                       year=int(parsedData.get('data-year','0')),
+                                       url=parsedData.get('data-url','No url'),
+                                       serie=serie.id)
 
-                #skip already parsed attributes
-                if key in ['data-category','data-series']:
-                    continue
-
-                #atrib,dummy = Attribut.get_or_create(key=key,value=value)
-                atrib = self.raiseEvent(Attribut.get_or_create(key=key,value=value))
-                #print "Atribut : %s = %s"%(atrib.key,atrib.value)
-                atribToItem,dummy = AttribToItem.get_or_create(item = serie.id , attribut = atrib.id )
 
             return None,False
         else :

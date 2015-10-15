@@ -18,7 +18,6 @@ class EventDispatcher( object ):
             return False
 
     def dispatchEvent(self,event):
-        pdb.set_trace()
         if ( event._type in self._events.keys() ):
             listeners = self._events[ event._type ]
 
