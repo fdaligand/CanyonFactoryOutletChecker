@@ -38,6 +38,12 @@ class Item(BaseModel):
     url = CharField(max_length=255)
     serie = ForeignKeyField(Serie)
 
+    def getSerie(self):
+
+        return Serie.get(Serie.id == self.serie_id).name
+
+
+
 
 # Exemple of creation on unique constraint
 #class Attribut(BaseModel):
