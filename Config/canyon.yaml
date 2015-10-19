@@ -1,0 +1,20 @@
+# [WebParam]
+# specificUrlLink=category=road-bikes/#
+# paramsOnUrl=category=road,type=html
+#
+mainUrl: https://www.canyon.com/fr/factory-outlet/
+ajaxUrl: ajax/articles.html
+urlParam:
+    category: road
+    type: html
+
+
+#Canyon specific parameter
+#
+
+#serie:             
+size: S
+#year:         
+
+
+
