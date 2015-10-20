@@ -1,20 +1,18 @@
-from Parameter.SpecificParameter import SpecificParameter
 from Parser.CanyonParser import CanyonParser
 from Checker.Checker import Checker
 from Dispatcher.EventDispatcher import EventDispatcher
-from Formater.Format import CanyonFormat
-
+from Formater.Format import CanyonFormat,Email
+import os
 import pdb
 
+BASE_DIR = os.getcwd()
 EP = EventDispatcher()
 
-params = SpecificParameter(r"https://www.canyon.com/fr/factory-outlet/ajax/articles.html",config=r"C:\Users\fdalingand\GitHub\CanyonFactoryOutlet\Config\canyon.cfg")
-check = Checker(params)
+check = Checker(BASE_DIR+'\\Config\\canyon.yaml')
 
-formater = CanyonFormat(eventDispatcher=EP)
-parser = CanyonParser(params.configPath,eventDispatcher=EP)
+formater = CanyonFormat(eventDispatcher=EP,config=BASE_DIR+'\\Config\\canyon.yaml')
+parser = CanyonParser(eventDispatcher=EP)
 
-parser.parseWebPage(check.go())
-pdb.set_trace()
-
-
+parser.parseWebPage(check.getPage())
+email=Email(config=BASE_DIR+'\\Config\\canyon.yaml',msg=formater)
+email.send()

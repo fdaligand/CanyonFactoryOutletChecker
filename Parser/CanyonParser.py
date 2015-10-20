@@ -22,19 +22,7 @@ class CanyonParser(Parser):
 
     def parseConfig(self,configPath):
         """ Parse specific cfg file """
-        params={}
-
-        if configPath:
-            cfg =  ConfigParser.ConfigParser()
-            cfg.read(configPath)
-            if cfg.has_section('WebParam'):
-                params['specificUrlLink'] = cfg.get('WebParam','specificUrlLink')
-                params['urlParameter']=self.parseListOfParam(cfg.get('WebParam','paramsOnUrl'))
-
-        else:
-            print "No configuration file to parse"
-
-        return params
+        pass
 
     def parseWebPage(self,webText):
 

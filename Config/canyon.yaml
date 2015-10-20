@@ -11,10 +11,14 @@ urlParam:
 
 #Canyon specific parameter
 #
+filter:
+    #serie:             
+    size: S
+    #year:         
 
-#serie:             
-size: S
-#year:         
+#Email parameter
+email:
+    from: fdaligand.insidefr.com
+    to: [fdaligand@insidefr.com,florent.daligand@gmail.com]        
 
-
-
+    
