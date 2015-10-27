@@ -1,7 +1,7 @@
 from peewee import *
 import os
 
-db = SqliteDatabase(r'C:\Users\fdalingand\GitHub\CanyonFactoryOutlet\DB\CFO_2.db')
+db = SqliteDatabase(r'/home/flo-ubu/github/CanyonFactoryOutletChecker/DB/CFO_2.db')
 
 def create_tables():
     db.connect()

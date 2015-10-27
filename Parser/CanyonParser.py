@@ -56,11 +56,11 @@ class CanyonParser(Parser):
             cate = self.raiseEvent(Category.get_or_create(name=cateAndSubCate[0]))
             print "category : %s"%cate.name
             subCate,dummy = SubCategory.get_or_create(name=cateAndSubCate[1],category=cate.id)
-            print "sub-category : %s"%subCate.name
+            print "   *sub-category : %s"%subCate.name
 
             if (parsedData.get('data-series')):
                 serie,dummy = Serie.get_or_create(name=parsedData['data-series'],subCategory=subCate.id)
-                print "Serie: %s"%serie.name
+                print "        -Serie: %s"%serie.name
             else :
                return None,True
 

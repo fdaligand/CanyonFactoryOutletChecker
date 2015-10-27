@@ -2,6 +2,8 @@ from Dispatcher import Event
 import yaml
 import pdb
 import smtplib
+import getpass
+
 class Format( object ):
 
     def __init__(self,config):
@@ -75,12 +77,15 @@ class CanyonFormat(Format):
 
 class Email( object ):
 
-    def __init__(self,config,msg):
+    def __init__(self,config,msg=None):
 
         self._from = 'florent.daligand.dev@gmail.com'
         self._to = self.getMailList(config)
-        self._msg = msg.getText()
-
+        self._pwd = getpass.getpass(prompt="Enter the password of SMTP server")
+        if msg:
+            self._msg = msg.getText()
+        else :
+            self._msg = "message de test de la class Email"
 
     def getMailList(self,config):
 
@@ -91,6 +96,15 @@ class Email( object ):
 
     def send(self):
 
-        server = smtplib.SMTP('smtp.gmail.com')
+        server = smtplib.SMTP('smtp.gmail.com:587')
+        server.starttls()
+	server.login('florent.daligand.dev@gmail.com',self._pwd)
         server.sendmail(self._from,self._to,self._msg)
         server.quit()
+
+
+if __name__ == '__main__' :
+
+    pdb.set_trace()		
+    mail= Email('../Config/canyon.yaml')
+    mail.send()
