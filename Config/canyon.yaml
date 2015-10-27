@@ -19,6 +19,6 @@ filter:
 #Email parameter
 email:
     from: fdaligand.insidefr.com
-    to: [fdaligand@insidefr.com,florent.daligand@gmail.com]        
+    to: florent.daligand@gmail.com        
 
     
