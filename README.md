@@ -4,4 +4,9 @@ A Python script that run periodically for checking the canyon factory outlet web
 
 PREREQUISITE
 
-Install SQLite3 in your machine (http://www.sqlite.org/download.html)
+ * [SQLite3](http://www.sqlite.org/download.html)
+ * lxml
+ * peewee
+ * yaml
+ * requests
+
