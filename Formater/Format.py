@@ -24,19 +24,15 @@ class Format( object ):
 
     def _toHtml(self):
         pass
-	
+
     def _filtering(self,data):
-	
+
         filtredEvent = False
-	if self._filter :
-	    for key,value in self._filter.items():
-		if value in data._data.get(key,''):
-		    filtredEvent = True
-        
-        return filtredEvent
-
-
-	
+        if self._filter :
+            for key,value in self._filter.items():
+                if value in data._data.get(key,''):
+                    filtredEvent = True
+            return filtredEvent
 
 class CanyonFormat(Format):
 
@@ -51,22 +47,22 @@ class CanyonFormat(Format):
     def _toHtml(self,event):
         """ append new item from event in html format"""
         if self._filtering(event._data):
-	    self._html += """ <br/>
-				<br/>		
-				<h1> New Item on canyon Factory Outlet </h1>
-				<br/>
-				<br/>
-				<h2> Model {serie}</h2>
-				<p> Size {size}
-				<h3><strong> {newPrice} Euros</strong> ( - {diff} Euros )</h3>
-				<br/>
-				<br/>""".format(serie= event._data.getSerie(),
-                      				size= event._data.size,
-                      				newPrice=self.formatPrice(event._data.price),
-                      				diff=self.formatPrice(event._data.diff)
-						)
+            self._html += """ <br/>
+                    <br/>       
+                    <h1> New Item on canyon Factory Outlet </h1>
+                    <br/>
+                    <br/>
+                    <h2> Model {serie}</h2>
+                    <p> Size {size}
+                    <h3><strong> {newPrice} Euros</strong> ( - {diff} Euros )</h3>
+                    <br/>
+                    <br/>""".format(serie= event._data.getSerie(),
+                                        size= event._data.size,
+                                        newPrice=self.formatPrice(event._data.price),
+                                        diff=self.formatPrice(event._data.diff)
+                            )
 
-        	
+            
     def appendNewItem(self,event):
 
         if self._filtering(event._data):
@@ -119,26 +115,24 @@ class Email( object ):
 
     def __init__(self,config,msg=None):
 
-        
-	self._msg = MIMEMultipart('alternative')
-	self._msg['Subject'] = "New Item on Canyon Factory Outlet"
-	self._msg['From'] = 'florent.daligand.dev@gmail.com'
-	self._msg['To'] = self.getMailList(config)
-	
+        self._msg = MIMEMultipart('alternative')
+        self._msg['Subject'] = "New Item on Canyon Factory Outlet"
+        self._msg['From'] = 'florent.daligand.dev@gmail.com'
+        self._msg['To'] = self.getMailList(config)
         self._pwd = getpass.getpass(prompt="Enter the password of SMTP server")
-        
-	if msg:
+            
+        if msg:
             self._text = msg.getText()
             self._html = msg.getHtml()
         else :
             self._text = "message de test de la class Email"
             self._html = "<h1>message de test de la class <strong>Email</strong></h1>"
 
-	part1 = MIMEText(self._text,'plain')
-	part2 = MIMEText(self._html,'html')
+        part1 = MIMEText(self._text,'plain')
+        part2 = MIMEText(self._html,'html')
 
-	self._msg.attach(part1)
-	self._msg.attach(part2)
+        self._msg.attach(part1)
+        self._msg.attach(part2)
 
     def getMailList(self,config):
 
@@ -151,8 +145,7 @@ class Email( object ):
 
         server = smtplib.SMTP('smtp.gmail.com:587')
         server.starttls()
-	server.login('florent.daligand.dev@gmail.com',self._pwd)
-	pdb.set_trace()
+        server.login('florent.daligand.dev@gmail.com',self._pwd)
         server.sendmail(self._msg['From'],self._msg['To'],self._msg.as_string())
         server.quit()
 

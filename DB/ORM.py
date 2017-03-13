@@ -1,7 +1,7 @@
 from peewee import *
 import os
 
-db = SqliteDatabase(r'/home/flo-ubu/github/CanyonFactoryOutletChecker/DB/CFO_2.db')
+db = SqliteDatabase(r'D:/FDL/perso/git/CanyonFactoryOutletChecker/DB/CFO_2.db')
 
 def create_tables():
     db.connect()
@@ -63,6 +63,6 @@ if __name__ == '__main__' :
 
     pdb.set_trace()
 
-    print Category.get(Category.id == 1)
+    print(Category.get(Category.id == 1))
 
 

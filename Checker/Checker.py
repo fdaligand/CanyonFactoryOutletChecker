@@ -1,7 +1,6 @@
 import requests
 from Parser import *
 import yaml
-import pdb
 
 class Checker(object):
 

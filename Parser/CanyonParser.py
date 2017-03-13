@@ -1,5 +1,4 @@
 from Parser import Parser
-import ConfigParser
 from lxml import html
 from DB import ORM
 from DB.ORM import Category,SubCategory,Serie,Item
@@ -11,17 +10,21 @@ import os
 import pdb
 
 
-class CanyonParser(Parser):
+class CanyonParser(Parser.Parser):
 
     def __init__(self,configPath=None,eventDispatcher=None):
 
+        # replace CanyonParser bu self
         self.params = CanyonParser.parseConfig(self,configPath)
         self.webParams = {}
+        # call super with eventDispatcher
         self.eventDispatcher = eventDispatcher
 
 
     def parseConfig(self,configPath):
         """ Parse specific cfg file """
+
+        # What is the utility of this method?
         pass
 
     def parseWebPage(self,webText):
@@ -37,7 +40,7 @@ class CanyonParser(Parser):
             #create a dict with all relevant information
             newField,errorInUpdate = self.updateModels(element.attrib)
 
-            #We detect new field durin update
+            #We detect new field during update
             if newField:
                 pass
 
@@ -54,13 +57,13 @@ class CanyonParser(Parser):
 
             cateAndSubCate = [x for x in parsedData.get('data-category').split('|') if x != '' ]
             cate = self.raiseEvent(Category.get_or_create(name=cateAndSubCate[0]))
-            print "category : %s"%cate.name
+            print("category : %s"%cate.name) 
             subCate,dummy = SubCategory.get_or_create(name=cateAndSubCate[1],category=cate.id)
-            print "   *sub-category : %s"%subCate.name
+            print("   *sub-category : %s"%subCate.name)
 
             if (parsedData.get('data-series')):
                 serie,dummy = Serie.get_or_create(name=parsedData['data-series'],subCategory=subCate.id)
-                print "        -Serie: %s"%serie.name
+                print("        -Serie: %s"%serie.name)
             else :
                return None,True
 

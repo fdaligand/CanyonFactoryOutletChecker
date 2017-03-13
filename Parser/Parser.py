@@ -23,7 +23,7 @@ class Parser(object):
                 x[lstKeyValue[0]] = lstKeyValue[1]
             else:
                 #TODO: raise an error of formating
-                print "Error : Bad formating!"
+                print("Error : Bad formating!")
 
         return x
 

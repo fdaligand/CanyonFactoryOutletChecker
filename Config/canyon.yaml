@@ -7,15 +7,13 @@ ajaxUrl: ajax/articles.html
 urlParam:
     category: road
     type: html
-
-
 #Canyon specific parameter
 #
 filter:
     #serie:             
     size: S
     #year:         
-
+    year: [2010,2011]
 #Email parameter
 email:
     from: fdaligand.insidefr.com
