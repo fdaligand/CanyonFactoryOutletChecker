@@ -1,26 +1,24 @@
-from Parser import Parser
-import ConfigParser
 from lxml import html
-from DB import ORM
-from DB.ORM import Category,SubCategory,Serie,Item
+from DB.ORM import Category, SubCategory, Serie, Item
 from Dispatcher.EventDispatcher import EventDispatcher
 from Dispatcher.Event import DbEvent
 from Formater.Format import CanyonFormat
 import peewee
 import os
-import pdb
+
+from Parser.Parser import Parser
 
 
 class CanyonParser(Parser):
 
-    def __init__(self,configPath=None,eventDispatcher=None):
+    def __init__(self, configPath=None, eventDispatcher=None):
 
-        self.params = CanyonParser.parseConfig(self,configPath)
+        self.params = self.parseConfig(configPath)
         self.webParams = {}
         self.eventDispatcher = eventDispatcher
 
 
-    def parseConfig(self,configPath):
+    def parseConfig(self, configPath):
         """ Parse specific cfg file """
         pass
 
@@ -35,7 +33,7 @@ class CanyonParser(Parser):
         for element in elements:
 
             #create a dict with all relevant information
-            newField,errorInUpdate = self.updateModels(element.attrib)
+            newField, errorInUpdate = self.updateModels(element.attrib)
 
             #We detect new field durin update
             if newField:
@@ -54,13 +52,13 @@ class CanyonParser(Parser):
 
             cateAndSubCate = [x for x in parsedData.get('data-category').split('|') if x != '' ]
             cate = self.raiseEvent(Category.get_or_create(name=cateAndSubCate[0]))
-            print "category : %s"%cate.name
+            print("category : %s"%cate.name)
             subCate,dummy = SubCategory.get_or_create(name=cateAndSubCate[1],category=cate.id)
-            print "   *sub-category : %s"%subCate.name
+            print("   *sub-category : %s"%subCate.name)
 
             if (parsedData.get('data-series')):
                 serie,dummy = Serie.get_or_create(name=parsedData['data-series'],subCategory=subCate.id)
-                print "        -Serie: %s"%serie.name
+                print("        -Serie: %s"%serie.name)
             else :
                return None,True
 
@@ -69,13 +67,13 @@ class CanyonParser(Parser):
                     item = Item.get(Item.item_id == parsedData['data-id'])
                 except peewee.DoesNotExist :
                     item = Item.create(item_id=parsedData['data-id'],
-                                       price=int(parsedData.get('data-price','0')),
-                                       diff=int(parsedData.get('data-diff','0')),
-                                       date=parsedData.get('data-date','No date'),
-                                       size=parsedData.get('data-size','No size'),
-                                       state=parsedData.get('data-state','No state'),
-                                       year=int(parsedData.get('data-year','0')),
-                                       url=parsedData.get('data-url','No url'),
+                                       price=int(parsedData.get('data-price', '0')),
+                                       diff=int(parsedData.get('data-diff', '0')),
+                                       date=parsedData.get('data-date', 'No date'),
+                                       size=parsedData.get('data-size', 'No size'),
+                                       state=parsedData.get('data-state', 'No state'),
+                                       year=int(parsedData.get('data-year', '0')),
+                                       url=parsedData.get('data-url', 'No url'),
                                        serie=serie.id)
                     self.eventDispatcher.dispatchEvent(DbEvent(item.__class__.__name__,item.id,data=item))
 

@@ -1,11 +1,10 @@
 from peewee import *
-import os
 
-db = SqliteDatabase(r'/home/flo-ubu/github/CanyonFactoryOutletChecker/DB/CFO_2.db')
+db = SqliteDatabase(r'CFO_2.db')
 
 def create_tables():
     db.connect()
-    db.create_tables([Category,SubCategory,Serie,Item])
+    db.create_tables([Category, SubCategory, Serie, Item])
 
 class BaseModel(Model):
     class Meta:
@@ -59,10 +58,9 @@ class Item(BaseModel):
 if __name__ == '__main__' :
 
     from ORM import *
-    import pdb
 
-    pdb.set_trace()
-
-    print Category.get(Category.id == 1)
+    create_tables()
+    Category.insert("toto")
+    print(Category.get(Category.id == 1).name)
 
 
