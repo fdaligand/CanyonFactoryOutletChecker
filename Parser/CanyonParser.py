@@ -13,14 +13,14 @@ import pdb
 
 class CanyonParser(Parser):
 
-    def __init__(self,configPath=None,eventDispatcher=None):
+    def __init__(self, configPath=None, eventDispatcher=None):
 
-        self.params = CanyonParser.parseConfig(self,configPath)
+        self.params = CanyonParser.parseConfig(self, configPath)
         self.webParams = {}
         self.eventDispatcher = eventDispatcher
 
 
-    def parseConfig(self,configPath):
+    def parseConfig(self, configPath):
         """ Parse specific cfg file """
         pass
 
@@ -47,37 +47,37 @@ class CanyonParser(Parser):
 
         return self.webParams
 
-    def updateModels(self,parsedData):
+    def updateModels(self, parsed_data):
 
         #find category and subcategory
-        if (parsedData.get('data-category')) :
+        if (parsed_data.get('data-category')) :
 
-            cateAndSubCate = [x for x in parsedData.get('data-category').split('|') if x != '' ]
+            cateAndSubCate = [x for x in parsed_data.get('data-category').split('|') if x != '']
             cate = self.raiseEvent(Category.get_or_create(name=cateAndSubCate[0]))
             print "category : %s"%cate.name
             subCate,dummy = SubCategory.get_or_create(name=cateAndSubCate[1],category=cate.id)
             print "   *sub-category : %s"%subCate.name
 
-            if (parsedData.get('data-series')):
-                serie,dummy = Serie.get_or_create(name=parsedData['data-series'],subCategory=subCate.id)
+            if (parsed_data.get('data-series')):
+                serie,dummy = Serie.get_or_create(name=parsed_data['data-series'], subCategory=subCate.id)
                 print "        -Serie: %s"%serie.name
             else :
                return None,True
 
-            if (parsedData.get('data-id')):
+            if parsed_data.get('data-id'):
                 try:
-                    item = Item.get(Item.item_id == parsedData['data-id'])
+                    item = Item.get(Item.item_id == parsed_data['data-id'])
                 except peewee.DoesNotExist :
-                    item = Item.create(item_id=parsedData['data-id'],
-                                       price=int(parsedData.get('data-price','0')),
-                                       diff=int(parsedData.get('data-diff','0')),
-                                       date=parsedData.get('data-date','No date'),
-                                       size=parsedData.get('data-size','No size'),
-                                       state=parsedData.get('data-state','No state'),
-                                       year=int(parsedData.get('data-year','0')),
-                                       url=parsedData.get('data-url','No url'),
+                    item = Item.create(item_id=parsed_data['data-id'],
+                                       price=int(parsed_data.get('data-price', '0')),
+                                       diff=int(parsed_data.get('data-diff', '0')),
+                                       date=parsed_data.get('data-date', 'No date'),
+                                       size=parsed_data.get('data-size', 'No size'),
+                                       state=parsed_data.get('data-state', 'No state'),
+                                       year=int(parsed_data.get('data-year', '0')),
+                                       url=parsed_data.get('data-url', 'No url'),
                                        serie=serie.id)
-                    self.eventDispatcher.dispatchEvent(DbEvent(item.__class__.__name__,item.id,data=item))
+                    self.eventDispatcher.dispatchEvent(DbEvent(item.__class__.__name__, item.id, data=item))
 
 
             return None,False

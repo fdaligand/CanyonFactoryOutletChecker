@@ -17,31 +17,31 @@ class EventDispatcher( object ):
         else :
             return False
 
-    def dispatchEvent(self,event):
-        if ( event._type in self._events.keys() ):
-            listeners = self._events[ event._type ]
+    def dispatchEvent(self, event):
+        if (event._type in self._events.keys()):
+            listeners = self._events[event._type]
 
             for listener in listeners :
-                listener( event )
+                listener(event)
 
-    def addEventListener(self,event_type, listener):
-        if not self.hasListener( event_type, listener) :
+    def addEventListener(self, event_type, listener):
+        if not self.hasListener( event_type, listener):
 
-            listeners = self._events.get(event_type,[])
-            listeners.append( listener )
-            self._events[ event_type ] = listeners
+            listeners = self._events.get(event_type, [])
+            listeners.append(listener)
+            self._events[event_type] = listeners
 
-    def removeEventListener(self,event_type,listener):
+    def removeEventListener(self, event_type, listener):
 
-        if self.hasListener(event_type,listener):
-            listeners = self._events[ event_type ]
+        if self.hasListener(event_type, listener):
+            listeners = self._events[event_type]
 
-            if len( listeners ) == 1:
+            if len(listeners) == 1:
 
                 del self._events[ event_type ]
 
-            else :
+            else:
 
-                listeners.remove( listener )
+                listeners.remove(listener)
                 self._events[event_type] = listeners
 

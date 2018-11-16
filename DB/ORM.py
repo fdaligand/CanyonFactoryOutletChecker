@@ -1,15 +1,23 @@
 from peewee import *
 import os
 
-db = SqliteDatabase(r'/home/flo-ubu/github/CanyonFactoryOutletChecker/DB/CFO_2.db')
+class Database:
+
+    DB_PATH = os.path.join(os.path.dirname(__file__), "CFO_2.db")
+    def __init__(self):
+        """ Create or load existing databse"""
+        if not os.path.isfile(self.DB_PATH):
+            pass
+        self.db = SqliteDatabase(self.DB_PATH)
+
 
 def create_tables():
     db.connect()
-    db.create_tables([Category,SubCategory,Serie,Item])
+    db.create_tables([Category, SubCategory, Serie, Item])
 
 class BaseModel(Model):
     class Meta:
-        database = db
+        database = Database().db
 
 class Category(BaseModel):
 

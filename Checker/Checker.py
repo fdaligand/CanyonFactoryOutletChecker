@@ -3,13 +3,16 @@ from Parser import *
 import yaml
 import pdb
 
+
 class Checker(object):
 
-    def __init__(self,configFile):
-        self.params = self.loadConfig(configFile)
+    def __init__(self, config_file):
+        self.params = self.loadConfig(config_file)
+        self.config_path = config_file
 
-    def loadConfig(self,config):
-        return yaml.load(open(config,'r'))
+    def loadConfig(self, config):
+        # open file but when is it close
+        return yaml.load(open(config, 'r'))
 
     def getPage(self):
 

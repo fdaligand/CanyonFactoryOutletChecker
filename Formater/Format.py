@@ -1,6 +1,5 @@
-from Dispatcher import Event
+
 import yaml
-import pdb
 import smtplib
 import getpass
 
@@ -8,29 +7,29 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 
-class Format( object ):
+class Format(object):
 
-    def __init__(self,config):
+    def __init__(self, config):
 
-        self._text=""
+        self._text = ""
         self._html = ""
-        self._specificText=""
-        self._filter=self._loadFilter(config)
+        self._specificText = ""
+        self._filter = self._loadFilter(config)
 
-    def _loadFilter(self,config):
+    def _loadFilter(self, config):
 
-        x = yaml.load(open(config,'r'))
-        return x.get('filter',None)
+        x = yaml.load(open(config, 'r'))
+        return x.get('filter', None)
 
     def _toHtml(self):
         pass
 	
-    def _filtering(self,data):
+    def _filtering(self, data):
 	
         filtredEvent = False
 	if self._filter :
-	    for key,value in self._filter.items():
-		if value in data._data.get(key,''):
+	    for key, value in self._filter.items():
+		if value in data.__getattribute__(key):
 		    filtredEvent = True
         
         return filtredEvent
@@ -42,7 +41,7 @@ class CanyonFormat(Format):
 
     def __init__(self,eventDispatcher,config):
 
-        super(CanyonFormat,self).__init__(config)
+        super(CanyonFormat, self).__init__(config)
         self._eventDispatcher=eventDispatcher
         self._eventDispatcher.addEventListener("Item", self.appendNewItem)
         self._eventDispatcher.addEventListener("Item", self._toHtml)
@@ -51,7 +50,7 @@ class CanyonFormat(Format):
     def _toHtml(self,event):
         """ append new item from event in html format"""
         if self._filtering(event._data):
-	    self._html += """ <br/>
+	        self._html += """ <br/>
 				<br/>		
 				<h1> New Item on canyon Factory Outlet </h1>
 				<br/>
